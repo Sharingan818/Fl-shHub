@@ -1,0 +1,209 @@
+-- LocalScript dentro de PlayerGui
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Função para criar a GUI principal
+local function createFlashHubs()
+    local screenGui = Instance.new("ScreenGui", playerGui)
+    screenGui.Name = "FlashHubs"
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 380, 0, 300)
+    frame.Position = UDim2.new(0.5, -190, 0.5, -150)
+    frame.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    frame.BorderSizePixel = 0
+    frame.Visible = false
+    frame.Parent = screenGui
+
+    local uicorner = Instance.new("UICorner")
+    uicorner.CornerRadius = UDim.new(0,15)
+    uicorner.Parent = frame
+
+    -- Bordas laterais, topo e base roxas em forma redonda
+    local function createBorder(size, position)
+        local border = Instance.new("Frame")
+        border.Size = size
+        border.Position = position
+        border.BackgroundColor3 = Color3.fromRGB(128,0,128)
+        border.BorderSizePixel = 0
+        border.Parent = frame
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0,10)
+        corner.Parent = border
+        return border
+    end
+
+    createBorder(UDim2.new(0,4,1,0), UDim2.new(0,0,0,0))     -- esquerda
+    createBorder(UDim2.new(0,4,1,0), UDim2.new(1,-4,0,0))    -- direita
+    createBorder(UDim2.new(1,0,0,4), UDim2.new(0,0,0,0))     -- topo
+    createBorder(UDim2.new(1,0,0,4), UDim2.new(0,0,1,-4))    -- base
+
+    -- Título
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(0,frame.Size.X.Offset,0,60)
+    title.Position = UDim2.new(0,0,0,0)
+    title.Text = "Fl@shHub"
+    title.BackgroundTransparency = 1
+    title.TextColor3 = Color3.fromRGB(128,0,128)
+    title.Font = Enum.Font.SourceSansBold
+    title.TextSize = 28
+    title.Parent = frame
+
+    -- Função para criar botões
+    local function createButton(name, position, color, parent, callback)
+        local button = Instance.new("TextButton")
+        button.Size = UDim2.new(0,160,0,50)
+        button.Position = position
+        button.Text = name
+        button.BackgroundColor3 = color
+        button.TextColor3 = Color3.fromRGB(255,255,255)
+        button.Font = Enum.Font.SourceSansBold
+        button.TextSize = 18
+        button.Parent = parent
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0,12)
+        corner.Parent = button
+        button.MouseButton1Click:Connect(callback)
+        return button
+    end
+
+    -- Botões mais próximos
+    local buttons = {}
+    buttons.miranda = createButton("Miranda Hub", UDim2.new(0,20,0,80), Color3.fromRGB(255,0,0), frame, function()
+        loadstring(game:HttpGet("https://pastefy.app/9YIyWc7E/raw"))()
+    end)
+    buttons.saex = createButton("SAEX HUB", UDim2.new(0,200,0,80), Color3.fromRGB(0,0,255), frame, function()
+        loadstring(game:HttpGet('https://pastefy.app/rs8Xqo2B/raw'))()
+    end)
+    buttons.lennon = createButton("Lennon Hub", UDim2.new(0,20,0,140), Color3.fromRGB(0,255,0), frame, function()
+        loadstring(game:HttpGet("https://pastefy.app/NU4lqGZe/raw"))()
+    end)
+    buttons.chilli = createButton("Chilli Hub", UDim2.new(0,200,0,140), Color3.fromRGB(255,100,0), frame, function()
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/a3e13a4a85ac4c2da17a6baab051ee1b.lua"))()
+    end)
+    buttons.pet = createButton("Pet Finder Hub", UDim2.new(0,110,0,200), Color3.fromRGB(128,0,128), frame, function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/murilolol/nslx-autojoiner/refs/heads/main/nslx%20x%20mkz.lua"))()
+    end)
+
+    -- Tornar frame arrastável
+    local UIS = game:GetService("UserInputService")
+    local dragging, dragInput, dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+
+    -- Animação de luz sobre os botões
+    spawn(function()
+        local btnList = {buttons.miranda, buttons.saex, buttons.lennon, buttons.chilli, buttons.pet}
+        while true do
+            for _, btn in ipairs(btnList) do
+                local originalColor = btn.BackgroundColor3
+                for i = 0, 1, 0.05 do
+                    btn.BackgroundColor3 = originalColor:lerp(Color3.fromRGB(255,255,255), i * 0.5)
+                    wait(0.02)
+                end
+                for i = 1, 0, -0.05 do
+                    btn.BackgroundColor3 = originalColor:lerp(Color3.fromRGB(255,255,255), i * 0.5)
+                    wait(0.02)
+                end
+            end
+        end
+    end)
+
+    return frame
+end
+
+-- Criar o ícone redondo arrastável com efeito RGB
+local iconGui = Instance.new("ScreenGui", playerGui)
+iconGui.Name = "FlashIcon"
+
+local icon = Instance.new("TextButton")
+icon.Size = UDim2.new(0,50,0,50)
+icon.Position = UDim2.new(0,20,0,200)
+icon.BackgroundColor3 = Color3.fromRGB(128,0,128)
+icon.Text = "F"
+icon.TextColor3 = Color3.fromRGB(255,255,255)
+icon.Font = Enum.Font.SourceSansBold
+icon.TextSize = 24
+icon.Parent = iconGui
+
+local iconCorner = Instance.new("UICorner")
+iconCorner.CornerRadius = UDim.new(0.5,0)
+iconCorner.Parent = icon
+
+-- Tornar ícone livremente arrastável
+local draggingIcon, dragInputIcon, dragStartIcon, startPosIcon
+local UIS = game:GetService("UserInputService")
+
+icon.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        draggingIcon = true
+        dragStartIcon = input.Position
+        startPosIcon = icon.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                draggingIcon = false
+            end
+        end)
+    end
+end)
+
+icon.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInputIcon = input
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if input == dragInputIcon and draggingIcon then
+        local delta = input.Position - dragStartIcon
+        icon.Position = UDim2.new(startPosIcon.X.Scale, startPosIcon.X.Offset + delta.X, startPosIcon.Y.Scale, startPosIcon.Y.Offset + delta.Y)
+    end
+end)
+
+-- Efeito RGB pulsante ao redor do ícone
+spawn(function()
+    local hue = 0
+    while true do
+        hue = (hue + 1) % 360
+        local color = Color3.fromHSV(hue/360, 1, 1)
+        icon.BorderColor3 = color
+        icon.BorderSizePixel = 2
+        wait(0.03)
+    end
+end)
+
+-- Criar GUI mas iniciar fechada
+local flashPanel = createFlashHubs()
+
+icon.MouseButton1Click:Connect(function()
+    flashPanel.Visible = not flashPanel.Visible -- alterna visibilidade
+end)
