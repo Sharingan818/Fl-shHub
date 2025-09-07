@@ -20,7 +20,7 @@ local function createFlashHubs()
     uicorner.CornerRadius = UDim.new(0,15)
     uicorner.Parent = frame
 
-    -- Bordas laterais, topo e base roxas em forma redonda
+    -- Bordas laterais, topo e base roxas arredondadas
     local function createBorder(size, position)
         local border = Instance.new("Frame")
         border.Size = size
@@ -50,10 +50,27 @@ local function createFlashHubs()
     title.TextSize = 28
     title.Parent = frame
 
+    -- Botão X para fechar no canto superior direito
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0,30,0,30)
+    closeBtn.Position = UDim2.new(1,-35,0,5)
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(200,0,0)
+    closeBtn.Font = Enum.Font.SourceSansBold
+    closeBtn.TextSize = 20
+    closeBtn.Parent = frame
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(0,6)
+    closeCorner.Parent = closeBtn
+    closeBtn.MouseButton1Click:Connect(function()
+        frame.Visible = false
+    end)
+
     -- Função para criar botões
     local function createButton(name, position, color, parent, callback)
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(0,160,0,50)
+        button.Size = UDim2.new(0,110,0,50) -- um pouco maior
         button.Position = position
         button.Text = name
         button.BackgroundColor3 = color
@@ -68,22 +85,29 @@ local function createFlashHubs()
         return button
     end
 
-    -- Botões mais próximos
+    -- Botões organizados em 3 colunas e 2 linhas
     local buttons = {}
+
+    -- Linha 1
     buttons.miranda = createButton("Miranda Hub", UDim2.new(0,20,0,80), Color3.fromRGB(255,0,0), frame, function()
         loadstring(game:HttpGet("https://pastefy.app/9YIyWc7E/raw"))()
     end)
-    buttons.saex = createButton("SAEX HUB", UDim2.new(0,200,0,80), Color3.fromRGB(0,0,255), frame, function()
+    buttons.saex = createButton("SAEX HUB", UDim2.new(0,140,0,80), Color3.fromRGB(0,0,255), frame, function()
         loadstring(game:HttpGet('https://pastefy.app/rs8Xqo2B/raw'))()
     end)
-    buttons.lennon = createButton("Lennon Hub", UDim2.new(0,20,0,140), Color3.fromRGB(0,255,0), frame, function()
-        loadstring(game:HttpGet("https://pastefy.app/NU4lqGZe/raw"))()
-    end)
-    buttons.chilli = createButton("Chilli Hub", UDim2.new(0,200,0,140), Color3.fromRGB(255,100,0), frame, function()
+    buttons.chilli = createButton("Chilli Hub", UDim2.new(0,260,0,80), Color3.fromRGB(255,100,0), frame, function()
         loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/a3e13a4a85ac4c2da17a6baab051ee1b.lua"))()
     end)
-    buttons.pet = createButton("Pet Finder Hub", UDim2.new(0,110,0,200), Color3.fromRGB(128,0,128), frame, function()
+
+    -- Linha 2 (Pet Finder alinhado com Miranda e Lennon)
+    buttons.lennon = createButton("Lennon Hub", UDim2.new(0,20,0,150), Color3.fromRGB(0,255,0), frame, function()
+        loadstring(game:HttpGet("https://pastefy.app/MJw2J4T6/raw"))()
+    end)
+    buttons.pet = createButton("Pet Finder Hub", UDim2.new(0,140,0,150), Color3.fromRGB(128,0,128), frame, function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/murilolol/nslx-autojoiner/refs/heads/main/nslx%20x%20mkz.lua"))()
+    end)
+    buttons.teleguiando = createButton("Teleguiando", UDim2.new(0,260,0,150), Color3.fromRGB(0,0,255), frame, function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ily123950/Vulkan/refs/heads/main/Trx"))()
     end)
 
     -- Tornar frame arrastável
@@ -122,7 +146,7 @@ local function createFlashHubs()
 
     -- Animação de luz sobre os botões
     spawn(function()
-        local btnList = {buttons.miranda, buttons.saex, buttons.lennon, buttons.chilli, buttons.pet}
+        local btnList = {buttons.miranda, buttons.saex, buttons.lennon, buttons.chilli, buttons.pet, buttons.teleguiando}
         while true do
             for _, btn in ipairs(btnList) do
                 local originalColor = btn.BackgroundColor3
@@ -141,7 +165,7 @@ local function createFlashHubs()
     return frame
 end
 
--- Criar o ícone redondo arrastável com efeito RGB
+-- Criar ícone redondo arrastável
 local iconGui = Instance.new("ScreenGui", playerGui)
 iconGui.Name = "FlashIcon"
 
@@ -159,10 +183,8 @@ local iconCorner = Instance.new("UICorner")
 iconCorner.CornerRadius = UDim.new(0.5,0)
 iconCorner.Parent = icon
 
--- Tornar ícone livremente arrastável
+-- Tornar ícone arrastável
 local draggingIcon, dragInputIcon, dragStartIcon, startPosIcon
-local UIS = game:GetService("UserInputService")
-
 icon.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         draggingIcon = true
@@ -182,6 +204,7 @@ icon.InputChanged:Connect(function(input)
     end
 end)
 
+local UIS = game:GetService("UserInputService")
 UIS.InputChanged:Connect(function(input)
     if input == dragInputIcon and draggingIcon then
         local delta = input.Position - dragStartIcon
@@ -203,7 +226,6 @@ end)
 
 -- Criar GUI mas iniciar fechada
 local flashPanel = createFlashHubs()
-
 icon.MouseButton1Click:Connect(function()
-    flashPanel.Visible = not flashPanel.Visible -- alterna visibilidade
+    flashPanel.Visible = not flashPanel.Visible
 end)
