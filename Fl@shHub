@@ -1,8 +1,5 @@
--- Código antigo do Fl@shHub
--- Agora serve apenas para avisar que o código foi atualizado
-
+-- ⚠️ Fl@shHub - Código Descontinuado
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- Mensagem de aviso e kick
-player:Kick("⚠️ Um novo código foi gerado!\n\nEste código é antigo.\nPegue o código atualizado para acessar o Fl@shHub.")
+player:Kick("🚫 Este código do Fl@shHub está desatualizado!\n\n✅ Use o novo código:\nloadstring(game:HttpGet('https://pastefy.app/UctfVoPW/raw'))()")
